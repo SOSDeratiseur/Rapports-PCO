@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SOS Rapports">
+<title>SOS Rapports</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0f1117;--sur:#181c27;--sur2:#1f2435;--bor:#2a3048;--acc:#e8ff47;--txt:#f0f2ff;--mut:#8891b4;--dan:#ff4444;--suc:#44ff99;--ora:#ff6b35;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+header{background:var(--sur);border-bottom:1px solid var(--bor);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hl{display:flex;align-items:center;gap:10px;}
+.hl img{height:42px;width:42px;object-fit:contain;border-radius:6px;background:#f5f0e8;padding:2px;}
+.hn{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;line-height:1.2;}
+.hn span{color:var(--acc);}
+.hs{font-size:.68rem;color:var(--mut);}
+.rid{font-size:.72rem;color:var(--mut);}
+.steps{display:flex;overflow-x:auto;background:var(--sur);border-bottom:1px solid var(--bor);padding:10px 16px;scrollbar-width:none;}
+.steps::-webkit-scrollbar{display:none;}
+.step{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;white-space:nowrap;border:none;background:none;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:.8rem;}
+.sn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;background:var(--sur2);border:1.5px solid var(--bor);color:var(--mut);}
+.step.active .sn{background:var(--acc);border-color:var(--acc);color:#0f1117;}
+.step.active{color:var(--txt);}
+.step.done .sn{background:var(--suc);border-color:var(--suc);color:#0f1117;}
+.sep{width:20px;height:1px;background:var(--bor);flex-shrink:0;align-self:center;}
+main{max-width:600px;margin:0 auto;padding:20px 16px 100px;}
+.pt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;margin-bottom:4px;}
+.ps{color:var(--mut);font-size:.85rem;margin-bottom:22px;}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);}
+input,textarea,select{background:var(--sur2);border:1.5px solid var(--bor);border-radius:8px;padding:11px 13px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:.93rem;outline:none;width:100%;-webkit-appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);}
+textarea{resize:vertical;min-height:75px;}
+select option{background:var(--sur2);}
+.page{display:none;}.page.active{display:block;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.pc{background:var(--sur2);border:2px solid var(--bor);border-radius:12px;padding:14px;cursor:pointer;position:relative;-webkit-user-select:none;user-select:none;}
+.pc.sel{border-color:var(--acc);background:rgba(232,255,71,.05);}
+.pc.sel::after{content:'✓';position:absolute;top:8px;right:10px;width:20px;height:20px;background:var(--acc);color:#0f1117;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;}
+.pi{font-size:1.8rem;margin-bottom:6px;}
+.pn{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:2px;}
+.pb{font-size:.72rem;color:var(--mut);}
+.lvls{display:flex;gap:4px;margin-top:8px;}
+.lv{flex:1;padding:5px 2px;border-radius:6px;border:none;background:var(--sur);color:var(--mut);font-size:.65rem;font-weight:600;cursor:pointer;text-align:center;}
+.ll{background:rgba(68,255,153,.15);color:var(--suc);}
+.lm{background:rgba(232,255,71,.15);color:var(--acc);}
+.lh{background:rgba(255,107,53,.15);color:var(--ora);}
+.lc{background:rgba(255,68,68,.15);color:var(--dan);}
+.pr{display:grid;grid-template-columns:1fr 1fr 70px 36px;gap:8px;align-items:end;margin-bottom:10px;}
+.bd{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--bor);background:var(--sur2);color:var(--mut);font-size:1rem;cursor:pointer;}
+.pz{border:2px dashed var(--bor);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;margin-bottom:14px;}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.th{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--sur2);}
+.th img{width:100%;height:100%;object-fit:cover;}
+.td{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(0,0,0,.75);border-radius:50%;border:none;color:#fff;font-size:.65rem;cursor:pointer;}
+.rr{display:flex;gap:8px;margin-bottom:8px;}
+.div{height:1px;background:var(--bor);margin:20px 0;}
+.nav{display:flex;justify-content:space-between;margin-top:28px;gap:10px;}
+.bp{background:var(--acc);color:#0f1117;border:none;border-radius:10px;padding:13px 24px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;flex:1;}
+.bs{background:transparent;color:var(--txt);border:1.5px solid var(--bor);border-radius:10px;padding:12px 20px;font-family:'Syne',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;}
+.bw{width:100%;margin-bottom:16px;}
+.prev{background:#fff;color:#111;border-radius:12px;padding:24px;font-size:.85rem;}
+.pvh{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #eee;padding-bottom:16px;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.pvlw{display:flex;align-items:center;gap:10px;}
+.pvlw img{height:48px;width:48px;object-fit:contain;background:#f5f0e8;border-radius:6px;padding:2px;}
+.pvln{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
+.pvln span{color:#8bc400;}
+.pvco{font-size:.72rem;color:#666;line-height:1.7;margin-top:2px;}
+.pvm{text-align:right;font-size:.75rem;color:#888;}
+.pvm strong{display:block;font-size:.9rem;color:#333;margin-bottom:2px;}
+.pvs{margin-bottom:18px;}
+.pvs h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#999;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:10px;}
+.pvg{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;}
+.pvf .pvfl{font-size:.68rem;color:#999;}
+.ptag{display:inline-flex;align-items:center;gap:5px;background:#f5f5f5;border-radius:5px;padding:3px 8px;font-size:.78rem;margin:2px;}
+.sd{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.slo{background:#44cc77;}.sme{background:#cccc00;}.shi{background:#ff8833;}.scr{background:#ff3333;}
+.ptb{width:100%;border-collapse:collapse;font-size:.8rem;}
+.ptb th{text-align:left;padding:5px 7px;background:#f5f5f5;font-size:.7rem;font-weight:600;text-transform:uppercase;color:#777;}
+.ptb td{padding:6px 7px;border-bottom:1px solid #eee;}
+.rl{padding-left:16px;font-size:.82rem;color:#333;}
+.rl li{margin-bottom:3px;}
+.pph{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;}
+.pph img{width:100%;height:80px;object-fit:cover;border-radius:5px;border:1px solid #eee;}
+.pvft{margin-top:20px;padding-top:12px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:.68rem;color:#bbb;flex-wrap:wrap;gap:4px;}
+.ios{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--acc);color:#0f1117;padding:16px;z-index:9999;}
+.ios h4{font-family:'Syne',sans-serif;font-weight:800;margin-bottom:6px;}
+.ios p{font-size:.82rem;line-height:1.7;}
+.ios button{margin-top:10px;background:#0f1117;color:var(--acc);border:none;border-radius:8px;padding:8px 18px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--acc);color:#0f1117;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.85rem;opacity:0;transition:all .3s;pointer-events:none;z-index:9998;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<header>
+  <div class="hl">
+    <img src="data:image/webp;base64,UklGRj4FAABXRUJQVlA4IDIFAADQGACdASpQAFAAPrVMnkqnJCKhq5js+OAWiWUAvVCseObGJx3+oPbHkGxF+sP8/5K96Pu8ygf57eCQAfkf9Q/2ffo/ynoB9U/8l6JH+34z7xn2APzT/xfuO+lT+U8Zv5r/gP/R7gv81/rv/a9cb2J/uB7Q6d23v2ogfX0y8YIeZgw93Nn+Ri2wGyAiqqcs1H0nP0o0p5OiWfl1XDRNXr7NeX6lAYP8TFgSzhsxIsrKRqENY9bsGSnfDv2+Ws1n4VgQ6EBYv0c0RsZr3VZiCAAA/vlbP9eq+161XOguv4K2OEzQq5HU53nDdinC//znd/+ag+uYAhKSXlZSmwD0OxaIJ34Ij8wZ9hc0BPelLGjoNlx5KrjzO4el/Ypzv8XMSfXxSdOygPTJE75CLpEaQX9ACovvYylit0NlPjrGPFYy3CDR4Dl4ivtNEq2uvl8eONfjOrjxwWhJFq9YbL9zaC7uw1mP8nmj6lU/zkATz5+BOgRQv+vKu/ygKKUU6Fvnw/SBE1AWQd6lwInKBlCNNzdXqWVb0yL19rqsgYfXycCzvY/3K2TpsL5T8QYIRToxuewX0whCh0RNiUUF30mWdGm50b/YalkCYGr32PVww/Ny1p3J6/iTpCeyDjdsUJ383D0hKrhzgpeXD9g5ZNAeqzAKD1n7Gg2zog/AQ25N9UtVBukP6nWgctG8lB92n6yPCF0AKFQ823d/Qi1c/sm90WcLCIiihCFRGWPYeOdMJL/nQJu8jJu6cgtlLKfdL2NMbMwdhzApx40ptd+xrAOvJv0/ZlDQsn+P+73gPBPFDSuGQn3TLqOWWoZNZf2KAC+Bvb7/M08JqtYjyQZYQvMlhz4mC4jb9y1g1zuOqXGCT9J8n2NCZqSGV8E8UQf2/TY4crzlUj3/FdtRIUpzpHT8sb8RB3kgemo993ldn4shziRGbrFUPqXFSBAFy1UTbsZ1VMybV1ESfBxVzVIAeoIjXi1ecLS4pJLex3CkvN6TVpCKGpJOnPXaETz3VB2NtJtBWsBzy6Xeee/+IrazjGWcWDSEl+suwdxXjX8bmHKc72jzSR+zfMurnSfORhT/rzr0VZP3AlQE45249p6X+x7AFM06RABeR9/EbS5BBjrQ7OzGKfZT6pVQHIG0tptfl7jZt7enxb94Z+wX27ZZRgYZPbBK4rLRfrhaRAb7w8B5AjPJ6dWP7JXvnyvz5rZKsK/SuLt34EXaVQHPpyUxQnqFNPsIeznfpjTUIyeZsVXARNVLxUWSD6N9mpbq1JxyTCmK6jYEbly8/wIk3PeGeWfz40z2v1/QP0fXfie1gvAS+Tyo+jIg4De71vzQYQRCM4hTT++wSHGSQrNnd2xh0MHXH0n/8Wx73QbD5cFgULtL9CswHJXMRex5q0iXP++RuONOvDag47qWL87g7CAk3nR5Xvx/AZhqM7HuEXYFYHQSUF1dJPgc0aL7MVoZJkneJg/wI/79xMRp8Qzf0ueJCTBu2Qi4+M+av5/6Q7leI83PfrLalJtNhkvB+03puX/Zh9Sq12eq8rYzSWdyle3/aGJ0rBsTdximoJ8TW2zZQ46oAwgUIC8PsW7pu35QQDfZWxHPQC5KSQgw12aR9fwULCwuumkKfFV56+lpiQW3BWbxbuClvomYEVKx+Zn+yybcud4sZmh808NA6qae5eG8u+9tWQsTuR6wbjMkaYqzD42VXdOHr80/4tgdaIizZ8mALmVHGML7ErYvmpk2RK4AMEwxAO1SI2XMjRAwyBgJzIgJDydplAAA" alt="Logo">
+    <div>
+      <div class="hn">SOS D&eacute;ratiseur <span>&amp; Nuisibles</span></div>
+      <div class="hs">0470 77 34 12 &middot; Info [at] sosderatiseur.be</div>
+    </div>
+  </div>
+  <div class="rid" id="rid"></div>
+</header>
+<div class="steps">
+  <button type="button" class="step active" id="st0" onclick="goTo(0)"><span class="sn">1</span>Client</button>
+  <div class="sep"></div>
+  <button type="button" class="step" id="st1" onclick="goTo(1)"><span class="sn">2</span>Nuisibles</button>
+  <div class="sep"></div>
+  <button type="button" class="step" id="st2" onclick="goTo(2)"><span class="sn">3</span>Produits</button>
+  <div class="sep"></div>
+  <button type="button" class="step" id="st3" onclick="goTo(3)"><span class="sn">4</span>Photos</button>
+  <div class="sep"></div>
+  <button type="button" class="step" id="st4" onclick="goTo(4)"><span class="sn">5</span>Recos</button>
+  <div class="sep"></div>
+  <button type="button" class="step" id="st5" onclick="goTo(5)"><span class="sn">6</span>Rapport</button>
+</div>
+<main>
+<div class="page active" id="p0">
+  <div class="pt">Informations client</div><div class="ps">Coordonn&eacute;es et d&eacute;tails de la visite</div>
+  <div class="fg2"><div class="fg"><label>Nom *</label><input type="text" id="cn" placeholder="Restaurant Le Parc"></div><div class="fg"><label>Contact</label><input type="text" id="cc" placeholder="M. Martin"></div></div>
+  <div class="fg2"><div class="fg"><label>T&eacute;l.</label><input type="tel" id="cph" placeholder="+32 04..."></div><div class="fg"><label>Email</label><input type="email" id="cem" placeholder="contact@..."></div></div>
+  <div class="fg"><label>Adresse *</label><input type="text" id="ca" placeholder="Rue, num&eacute;ro, code postal, ville"></div>
+  <div class="fg"><label>Type</label><select id="ct"><option value="">-- S&eacute;lectionner --</option><option>Restaurant / HoReCa</option><option>R&eacute;sidentiel</option><option>Bureau / Commerce</option><option>Entrep&ocirc;t / Industrie</option><option>H&ocirc;pital</option><option>Ecole / Cr&egrave;che</option><option>Autre</option></select></div>
+  <div class="fg2"><div class="fg"><label>Date</label><input type="date" id="vd"></div><div class="fg"><label>Arriv&eacute;e</label><input type="time" id="vs"></div></div>
+  <div class="fg2"><div class="fg"><label>D&eacute;part</label><input type="time" id="ve"></div><div class="fg"><label>Technicien</label><input type="text" id="vt" placeholder="Votre nom"></div></div>
+  <div class="fg"><label>Observations</label><textarea id="vo" placeholder="Conditions observ&eacute;es..."></textarea></div>
+  <div class="nav"><div></div><button type="button" class="bp" onclick="goTo(1)">Suivant &rarr;</button></div>
+</div>
+<div class="page" id="p1">
+  <div class="pt">Nuisibles d&eacute;tect&eacute;s</div><div class="ps">S&eacute;lectionne et &eacute;value le niveau</div>
+  <div class="pgrid">
+    <div class="pc" id="pcr"><div class="pi">&#x1F400;</div><div class="pn">Rongeurs</div><div class="pb">Rats, souris</div><div class="lvls"><button type="button" class="lv" onclick="setL(event,'r','Faible','ll')">Faible</button><button type="button" class="lv" onclick="setL(event,'r','Moyen','lm')">Moyen</button><button type="button" class="lv" onclick="setL(event,'r','Eleve','lh')">Eleve</button><button type="button" class="lv" onclick="setL(event,'r','Critique','lc')">Critique</button></div></div>
+    <div class="pc" id="pci"><div class="pi">&#x1FAB3;</div><div class="pn">Insectes rampants</div><div class="pb">Cafards, fourmis</div><div class="lvls"><button type="button" class="lv" onclick="setL(event,'i','Faible','ll')">Faible</button><button type="button" class="lv" onclick="setL(event,'i','Moyen','lm')">Moyen</button><button type="button" class="lv" onclick="setL(event,'i','Eleve','lh')">Eleve</button><button type="button" class="lv" onclick="setL(event,'i','Critique','lc')">Critique</button></div></div>
+    <div class="pc" id="pcv"><div class="pi">&#x1F99F;</div><div class="pn">Insectes volants</div><div class="pb">Gu&ecirc;pes, mouches</div><div class="lvls"><button type="button" class="lv" onclick="setL(event,'v','Faible','ll')">Faible</button><button type="button" class="lv" onclick="setL(event,'v','Moyen','lm')">Moyen</button><button type="button" class="lv" onclick="setL(event,'v','Eleve','lh')">Eleve</button><button type="button" class="lv" onclick="setL(event,'v','Critique','lc')">Critique</button></div></div>
+    <div class="pc" id="pcp"><div class="pi">&#x1F6CF;</div><div class="pn">Punaises de lit</div><div class="pb">Cimex lectularius</div><div class="lvls"><button type="button" class="lv" onclick="setL(event,'p','Faible','ll')">Faible</button><button type="button" class="lv" onclick="setL(event,'p','Moyen','lm')">Moyen</button><button type="button" class="lv" onclick="setL(event,'p','Eleve','lh')">Eleve</button><button type="button" class="lv" onclick="setL(event,'p','Critique','lc')">Critique</button></div></div>
+  </div>
+  <div class="fg"><label>Zones</label><textarea id="pz" placeholder="Ex: Cuisine, cave..."></textarea></div>
+  <div class="nav"><button type="button" class="bs" onclick="goTo(0)">&larr; Retour</button><button type="button" class="bp" onclick="goTo(2)">Suivant &rarr;</button></div>
+</div>
+<div class="page" id="p2">
+  <div class="pt">Produits &amp; traitements</div><div class="ps">Produits utilis&eacute;s</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 70px 36px;gap:8px;margin-bottom:6px;"><label>Produit</label><label>M&eacute;thode</label><label>Qte</label><div></div></div>
+  <div id="prodlist"></div>
+  <button type="button" class="bs bw" onclick="addP()">+ Ajouter un produit</button>
+  <div class="div"></div>
+  <div class="fg"><label>Type d'intervention</label><select id="it"><option value="">-- S&eacute;lectionner --</option><option>Inspection initiale</option><option>Traitement curatif</option><option>Traitement pr&eacute;ventif</option><option>Suivi</option><option>Urgence</option></select></div>
+  <div class="fg"><label>Notes</label><textarea id="tn" placeholder="Zones trait&eacute;es..."></textarea></div>
+  <div class="nav"><button type="button" class="bs" onclick="goTo(1)">&larr; Retour</button><button type="button" class="bp" onclick="goTo(3)">Suivant &rarr;</button></div>
+</div>
+<div class="page" id="p3">
+  <div class="pt">Photos</div><div class="ps">Zones infest&eacute;es ou trait&eacute;es</div>
+  <div class="pz" onclick="document.getElementById('phi').click()">
+    <input type="file" id="phi" accept="image/*" multiple style="display:none" onchange="addPhotos(this)">
+    <div style="font-size:2rem;margin-bottom:8px;">&#x1F4F7;</div>
+    <p style="color:var(--mut);"><span style="color:var(--acc);font-weight:600;">Appuie ici</span> pour ajouter des photos</p>
+  </div>
+  <div class="tg" id="tgrid"></div>
+  <div class="nav"><button type="button" class="bs" onclick="goTo(2)">&larr; Retour</button><button type="button" class="bp" onclick="goTo(4)">Suivant &rarr;</button></div>
+</div>
+<div class="page" id="p4">
+  <div class="pt">Recommandations &amp; suivi</div><div class="ps">Actions et prochaine visite</div>
+  <div id="recolist"></div>
+  <button type="button" class="bs bw" onclick="addR()">+ Ajouter une recommandation</button>
+  <div class="div"></div>
+  <div class="fg2"><div class="fg"><label>Prochaine visite</label><input type="date" id="nv"></div><div class="fg"><label>Risque global</label><select id="rsk"><option value="">-- Evaluer --</option><option>Faible</option><option>Modere</option><option>Eleve</option><option>Critique</option></select></div></div>
+  <div class="fg"><label>Nom client present</label><input type="text" id="sig" placeholder="Nom du representant"></div>
+  <div class="nav"><button type="button" class="bs" onclick="goTo(3)">&larr; Retour</button><button type="button" class="bp" onclick="buildRep()">Generer &rarr;</button></div>
+</div>
+<div class="page" id="p5">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+    <div><div class="pt">Rapport &#x2713;</div><div class="ps">Apercu avant export</div></div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="bs" onclick="goTo(0)">Modifier</button>
+      <button type="button" class="bp" onclick="expPDF()">PDF</button>
+    </div>
+  </div>
+  <div class="prev" id="pvbox"></div>
+  <div class="nav" style="margin-top:20px;"><button type="button" class="bs" onclick="goTo(4)">&larr; Retour</button><button type="button" class="bp" onclick="expPDF()">Exporter PDF</button></div>
+</div>
+</main>
+<div class="ios" id="iosbanner">
+  <h4>Installer sur iPhone / iPad</h4>
+  <p>1. Appuie sur Partager en bas de Safari<br>2. "Sur l'ecran d'accueil"<br>3. Ajouter</p>
+  <button type="button" onclick="document.getElementById('iosbanner').style.display='none'">OK</button>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var P={},photos=[],cur=0;
+function goTo(n){
+  document.getElementById('p'+cur).classList.remove('active');
+  var o=document.getElementById('st'+cur);
+  o.classList.remove('active');o.classList.add('done');
+  cur=n;
+  document.getElementById('p'+n).classList.add('active');
+  var s=document.getElementById('st'+n);
+  s.classList.remove('done');s.classList.add('active');
+  window.scrollTo(0,0);
+}
+function setL(e,k,lv,cls){
+  e.stopPropagation();
+  if(!P[k])P[k]={};
+  P[k].lv=lv;P[k].sel=true;
+  var c=document.getElementById('pc'+k);
+  c.classList.add('sel');
+  var bs=c.querySelectorAll('.lv');
+  for(var i=0;i<bs.length;i++){bs[i].className='lv';if(bs[i].textContent.trim()===lv)bs[i].classList.add(cls);}
+}
+function addP(){
+  var l=document.getElementById('prodlist');
+  var d=document.createElement('div');d.className='pr';
+  d.innerHTML='<input type="text" placeholder="Racumin Gel" class="pn"><input type="text" placeholder="Application" class="pm"><input type="text" placeholder="50g" class="pq"><button type="button" class="bd" onclick="this.parentElement.remove()">x</button>';
+  l.appendChild(d);
+}
+function addPhotos(inp){
+  Array.from(inp.files).forEach(function(f){
+    var r=new FileReader();
+    r.onload=function(e){photos.push(e.target.result);rPhotos();};
+    r.readAsDataURL(f);
+  });
+}
+function rPhotos(){
+  var g=document.getElementById('tgrid');g.innerHTML='';
+  photos.forEach(function(s,i){
+    var d=document.createElement('div');d.className='th';
+    d.innerHTML='<img src="'+s+'"><button type="button" class="td" onclick="delPhoto('+i+')">x</button>';
+    g.appendChild(d);
+  });
+}
+function delPhoto(i){photos.splice(i,1);rPhotos();}
+function addR(){
+  var l=document.getElementById('recolist');
+  var d=document.createElement('div');d.className='rr';
+  d.innerHTML='<input type="text" placeholder="Ex: Colmater les fissures..."><button type="button" class="bd" onclick="this.parentElement.remove()">x</button>';
+  l.appendChild(d);
+}
+function getR(){
+  var out=[];
+  document.querySelectorAll('#recolist input').forEach(function(r){if(r.value.trim())out.push(r.value.trim());});
+  return out;
+}
+function getProds(){
+  var out=[];
+  document.querySelectorAll('#prodlist .pr').forEach(function(r){
+    var n=r.querySelector('.pn').value.trim();
+    if(n)out.push({name:n,meth:r.querySelector('.pm').value.trim(),qty:r.querySelector('.pq').value.trim()});
+  });
+  return out;
+}
+function fdate(v){
+  if(!v)return '-';
+  var p=v.split('-');
+  var m=['jan','fev','mars','avr','mai','juin','juil','aout','sep','oct','nov','dec'];
+  return p[2]+' '+m[parseInt(p[1])-1]+' '+p[0];
+}
+function buildRep(){
+  var cn=document.getElementById('cn').value||'-';
+  var cc=document.getElementById('cc').value||'-';
+  var cph=document.getElementById('cph').value||'-';
+  var cem=document.getElementById('cem').value||'-';
+  var ca=document.getElementById('ca').value||'-';
+  var ct=document.getElementById('ct').value||'-';
+  var vd=document.getElementById('vd').value;
+  var vs=document.getElementById('vs').value;
+  var ve=document.getElementById('ve').value;
+  var vt=document.getElementById('vt').value||'-';
+  var vo=document.getElementById('vo').value;
+  var pz=document.getElementById('pz').value;
+  var it=document.getElementById('it').value||'-';
+  var tn=document.getElementById('tn').value;
+  var nv=document.getElementById('nv').value;
+  var rsk=document.getElementById('rsk').value||'-';
+  var sig=document.getElementById('sig').value;
+  var prods=getProds(),recos=getR();
+  var nm={r:'Rongeurs',i:'Insectes rampants',v:'Insectes volants',p:'Punaises de lit'};
+  var sc={Faible:'slo',Moyen:'sme',Eleve:'shi',Critique:'scr'};
+  var ps=Object.entries(P).filter(function(e){return e[1].sel;});
+  var pH=ps.length===0?'<span style="color:#aaa">Aucun</span>':ps.map(function(e){return '<span class="ptag">'+nm[e[0]]+(e[1].lv?' <span class="sd '+(sc[e[1].lv]||'')+'"></span> '+e[1].lv:'')+'</span>';}).join('');
+  var pR=prods.length===0?'<tr><td colspan="3" style="color:#aaa">Aucun produit</td></tr>':prods.map(function(p){return '<tr><td>'+p.name+'</td><td>'+(p.meth||'-')+'</td><td>'+(p.qty||'-')+'</td></tr>';}).join('');
+  var rH=recos.length===0?'<span style="color:#aaa">Aucune</span>':'<ul class="rl">'+recos.map(function(r){return '<li>'+r+'</li>';}).join('')+'</ul>';
+  var phH=photos.length===0?'<span style="color:#aaa">Aucune photo</span>':'<div class="pph">'+photos.map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
+  document.getElementById('pvbox').innerHTML=
+    '<div class="pvh"><div class="pvlw"><img src="data:image/webp;base64,UklGRj4FAABXRUJQVlA4IDIFAADQGACdASpQAFAAPrVMnkqnJCKhq5js+OAWiWUAvVCseObGJx3+oPbHkGxF+sP8/5K96Pu8ygf57eCQAfkf9Q/2ffo/ynoB9U/8l6JH+34z7xn2APzT/xfuO+lT+U8Zv5r/gP/R7gv81/rv/a9cb2J/uB7Q6d23v2ogfX0y8YIeZgw93Nn+Ri2wGyAiqqcs1H0nP0o0p5OiWfl1XDRNXr7NeX6lAYP8TFgSzhsxIsrKRqENY9bsGSnfDv2+Ws1n4VgQ6EBYv0c0RsZr3VZiCAAA/vlbP9eq+161XOguv4K2OEzQq5HU53nDdinC//znd/+ag+uYAhKSXlZSmwD0OxaIJ34Ij8wZ9hc0BPelLGjoNlx5KrjzO4el/Ypzv8XMSfXxSdOygPTJE75CLpEaQX9ACovvYylit0NlPjrGPFYy3CDR4Dl4ivtNEq2uvl8eONfjOrjxwWhJFq9YbL9zaC7uw1mP8nmj6lU/zkATz5+BOgRQv+vKu/ygKKUU6Fvnw/SBE1AWQd6lwInKBlCNNzdXqWVb0yL19rqsgYfXycCzvY/3K2TpsL5T8QYIRToxuewX0whCh0RNiUUF30mWdGm50b/YalkCYGr32PVww/Ny1p3J6/iTpCeyDjdsUJ383D0hKrhzgpeXD9g5ZNAeqzAKD1n7Gg2zog/AQ25N9UtVBukP6nWgctG8lB92n6yPCF0AKFQ823d/Qi1c/sm90WcLCIiihCFRGWPYeOdMJL/nQJu8jJu6cgtlLKfdL2NMbMwdhzApx40ptd+xrAOvJv0/ZlDQsn+P+73gPBPFDSuGQn3TLqOWWoZNZf2KAC+Bvb7/M08JqtYjyQZYQvMlhz4mC4jb9y1g1zuOqXGCT9J8n2NCZqSGV8E8UQf2/TY4crzlUj3/FdtRIUpzpHT8sb8RB3kgemo993ldn4shziRGbrFUPqXFSBAFy1UTbsZ1VMybV1ESfBxVzVIAeoIjXi1ecLS4pJLex3CkvN6TVpCKGpJOnPXaETz3VB2NtJtBWsBzy6Xeee/+IrazjGWcWDSEl+suwdxXjX8bmHKc72jzSR+zfMurnSfORhT/rzr0VZP3AlQE45249p6X+x7AFM06RABeR9/EbS5BBjrQ7OzGKfZT6pVQHIG0tptfl7jZt7enxb94Z+wX27ZZRgYZPbBK4rLRfrhaRAb7w8B5AjPJ6dWP7JXvnyvz5rZKsK/SuLt34EXaVQHPpyUxQnqFNPsIeznfpjTUIyeZsVXARNVLxUWSD6N9mpbq1JxyTCmK6jYEbly8/wIk3PeGeWfz40z2v1/QP0fXfie1gvAS+Tyo+jIg4De71vzQYQRCM4hTT++wSHGSQrNnd2xh0MHXH0n/8Wx73QbD5cFgULtL9CswHJXMRex5q0iXP++RuONOvDag47qWL87g7CAk3nR5Xvx/AZhqM7HuEXYFYHQSUF1dJPgc0aL7MVoZJkneJg/wI/79xMRp8Qzf0ueJCTBu2Qi4+M+av5/6Q7leI83PfrLalJtNhkvB+03puX/Zh9Sq12eq8rYzSWdyle3/aGJ0rBsTdximoJ8TW2zZQ46oAwgUIC8PsW7pu35QQDfZWxHPQC5KSQgw12aR9fwULCwuumkKfFV56+lpiQW3BWbxbuClvomYEVKx+Zn+yybcud4sZmh808NA6qae5eG8u+9tWQsTuR6wbjMkaYqzD42VXdOHr80/4tgdaIizZ8mALmVHGML7ErYvmpk2RK4AMEwxAO1SI2XMjRAwyBgJzIgJDydplAAA" alt=""><div><div class="pvln">SOS Deratiseur <span>& Nuisibles</span></div><div class="pvco">Rue de la Cayauderie 58, 6000 Charleroi<br>0470 77 34 12</div></div></div><div class="pvm"><strong>'+window._rid+'</strong>'+fdate(vd)+(vs?'<br>'+vs+(ve?' > '+ve:''):'')+'</div></div>'+
+    '<div class="pvs"><h3>Client</h3><div class="pvg"><div class="pvf"><div class="pvfl">Nom</div>'+cn+'</div><div class="pvf"><div class="pvfl">Contact</div>'+cc+'</div><div class="pvf"><div class="pvfl">Adresse</div>'+ca+'</div><div class="pvf"><div class="pvfl">Type</div>'+ct+'</div><div class="pvf"><div class="pvfl">Tel.</div>'+cph+'</div><div class="pvf"><div class="pvfl">Email</div>'+cem+'</div><div class="pvf"><div class="pvfl">Technicien</div>'+vt+'</div><div class="pvf"><div class="pvfl">Intervention</div>'+it+'</div></div>'+(vo?'<div style="margin-top:8px;font-size:.82rem;color:#555">'+vo+'</div>':'')+'</div>'+
+    '<div class="pvs"><h3>Nuisibles</h3>'+pH+(pz?'<div style="margin-top:6px;font-size:.8rem;color:#555">Zones: '+pz+'</div>':'')+'</div>'+
+    '<div class="pvs"><h3>Produits</h3><table class="ptb"><thead><tr><th>Produit</th><th>Methode</th><th>Qte</th></tr></thead><tbody>'+pR+'</tbody></table>'+(tn?'<div style="margin-top:8px;font-size:.8rem;color:#555">'+tn+'</div>':'')+'</div>'+
+    '<div class="pvs"><h3>Photos ('+photos.length+')</h3>'+phH+'</div>'+
+    '<div class="pvs"><h3>Recommandations</h3>'+rH+'</div>'+
+    '<div class="pvs"><h3>Suivi</h3><div class="pvg"><div class="pvf"><div class="pvfl">Prochaine visite</div>'+fdate(nv)+'</div><div class="pvf"><div class="pvfl">Risque</div>'+rsk+'</div></div></div>'+
+    '<div class="pvft"><span>Signature: '+(sig||'______________________')+'</span><span>'+fdate(vd)+' - SOS Deratiseur</span></div>';
+  goTo(5);
+}
+function expPDF(){
+  if(!window.jspdf){showToast('Chargement PDF...');setTimeout(expPDF,500);return;}
+  showToast('Generation PDF...');
+  var doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});
+  var M=14,W=210,CW=W-M*2,y=M;
+  doc.setFillColor(15,17,23);doc.rect(0,0,210,30,'F');
+  try{doc.addImage('data:image/webp;base64,UklGRj4FAABXRUJQVlA4IDIFAADQGACdASpQAFAAPrVMnkqnJCKhq5js+OAWiWUAvVCseObGJx3+oPbHkGxF+sP8/5K96Pu8ygf57eCQAfkf9Q/2ffo/ynoB9U/8l6JH+34z7xn2APzT/xfuO+lT+U8Zv5r/gP/R7gv81/rv/a9cb2J/uB7Q6d23v2ogfX0y8YIeZgw93Nn+Ri2wGyAiqqcs1H0nP0o0p5OiWfl1XDRNXr7NeX6lAYP8TFgSzhsxIsrKRqENY9bsGSnfDv2+Ws1n4VgQ6EBYv0c0RsZr3VZiCAAA/vlbP9eq+161XOguv4K2OEzQq5HU53nDdinC//znd/+ag+uYAhKSXlZSmwD0OxaIJ34Ij8wZ9hc0BPelLGjoNlx5KrjzO4el/Ypzv8XMSfXxSdOygPTJE75CLpEaQX9ACovvYylit0NlPjrGPFYy3CDR4Dl4ivtNEq2uvl8eONfjOrjxwWhJFq9YbL9zaC7uw1mP8nmj6lU/zkATz5+BOgRQv+vKu/ygKKUU6Fvnw/SBE1AWQd6lwInKBlCNNzdXqWVb0yL19rqsgYfXycCzvY/3K2TpsL5T8QYIRToxuewX0whCh0RNiUUF30mWdGm50b/YalkCYGr32PVww/Ny1p3J6/iTpCeyDjdsUJ383D0hKrhzgpeXD9g5ZNAeqzAKD1n7Gg2zog/AQ25N9UtVBukP6nWgctG8lB92n6yPCF0AKFQ823d/Qi1c/sm90WcLCIiihCFRGWPYeOdMJL/nQJu8jJu6cgtlLKfdL2NMbMwdhzApx40ptd+xrAOvJv0/ZlDQsn+P+73gPBPFDSuGQn3TLqOWWoZNZf2KAC+Bvb7/M08JqtYjyQZYQvMlhz4mC4jb9y1g1zuOqXGCT9J8n2NCZqSGV8E8UQf2/TY4crzlUj3/FdtRIUpzpHT8sb8RB3kgemo993ldn4shziRGbrFUPqXFSBAFy1UTbsZ1VMybV1ESfBxVzVIAeoIjXi1ecLS4pJLex3CkvN6TVpCKGpJOnPXaETz3VB2NtJtBWsBzy6Xeee/+IrazjGWcWDSEl+suwdxXjX8bmHKc72jzSR+zfMurnSfORhT/rzr0VZP3AlQE45249p6X+x7AFM06RABeR9/EbS5BBjrQ7OzGKfZT6pVQHIG0tptfl7jZt7enxb94Z+wX27ZZRgYZPbBK4rLRfrhaRAb7w8B5AjPJ6dWP7JXvnyvz5rZKsK/SuLt34EXaVQHPpyUxQnqFNPsIeznfpjTUIyeZsVXARNVLxUWSD6N9mpbq1JxyTCmK6jYEbly8/wIk3PeGeWfz40z2v1/QP0fXfie1gvAS+Tyo+jIg4De71vzQYQRCM4hTT++wSHGSQrNnd2xh0MHXH0n/8Wx73QbD5cFgULtL9CswHJXMRex5q0iXP++RuONOvDag47qWL87g7CAk3nR5Xvx/AZhqM7HuEXYFYHQSUF1dJPgc0aL7MVoZJkneJg/wI/79xMRp8Qzf0ueJCTBu2Qi4+M+av5/6Q7leI83PfrLalJtNhkvB+03puX/Zh9Sq12eq8rYzSWdyle3/aGJ0rBsTdximoJ8TW2zZQ46oAwgUIC8PsW7pu35QQDfZWxHPQC5KSQgw12aR9fwULCwuumkKfFV56+lpiQW3BWbxbuClvomYEVKx+Zn+yybcud4sZmh808NA6qae5eG8u+9tWQsTuR6wbjMkaYqzD42VXdOHr80/4tgdaIizZ8mALmVHGML7ErYvmpk2RK4AMEwxAO1SI2XMjRAwyBgJzIgJDydplAAA','WEBP',M,5,18,18);}catch(ex){}
+  doc.setTextColor(232,255,71);doc.setFontSize(13);doc.setFont('helvetica','bold');
+  doc.text('SOS Deratiseur & Nuisibles',M+22,13);
+  doc.setTextColor(180,180,180);doc.setFontSize(7);doc.setFont('helvetica','normal');
+  doc.text('Rue de la Cayauderie 58, 6000 Charleroi | 0470 77 34 12',M+22,19);
+  doc.text('Rapport intervention - '+window._rid,M+22,25);
+  y=36;
+  function sec(t){if(y>270){doc.addPage();y=M;}doc.setFillColor(235,238,248);doc.rect(M,y,CW,7,'F');doc.setTextColor(50,60,100);doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(t,M+3,y+5);y+=10;doc.setTextColor(30,30,30);doc.setFont('helvetica','normal');doc.setFontSize(9);}
+  function fld(l,v,x,w){if(y>270){doc.addPage();y=M;}doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(150,150,150);doc.text(l,x,y);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(30,30,30);var ls=doc.splitTextToSize(v||'-',w-2);doc.text(ls,x,y+4);}
+  sec('CLIENT');var H=CW/2;
+  fld('NOM',document.getElementById('cn').value,M,H);fld('CONTACT',document.getElementById('cc').value,M+H,H);y+=10;
+  fld('ADRESSE',document.getElementById('ca').value,M,CW);y+=10;
+  fld('TEL',document.getElementById('cph').value,M,H);fld('EMAIL',document.getElementById('cem').value,M+H,H);y+=10;
+  fld('TECHNICIEN',document.getElementById('vt').value,M,H);fld('TYPE',document.getElementById('ct').value,M+H,H);y+=10;
+  fld('INTERVENTION',document.getElementById('it').value,M,H);
+  var vs=document.getElementById('vs').value,ve=document.getElementById('ve').value;
+  if(vs||ve){fld('HORAIRE',(vs||'')+(ve?' > '+ve:''),M+H,H);}
+  y+=12;
+  var vo=document.getElementById('vo').value;
+  if(vo){doc.setFont('helvetica','italic');doc.setFontSize(8.5);doc.setTextColor(90,90,90);var ol=doc.splitTextToSize(vo,CW);doc.text(ol,M,y);y+=ol.length*4+4;}
+  sec('NUISIBLES');
+  var ps2=Object.entries(P).filter(function(e){return e[1].sel;});
+  var nm2={r:'Rongeurs',i:'Insectes rampants',v:'Insectes volants',p:'Punaises de lit'};
+  if(ps2.length===0){doc.text('Aucun nuisible',M,y);y+=7;}
+  else{
+    var sc2={Faible:[68,204,119],Moyen:[180,160,0],Eleve:[220,110,30],Critique:[200,40,40]};
+    ps2.forEach(function(e){
+      if(y>270){doc.addPage();y=M;}
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(30,30,30);
+      doc.text('- '+nm2[e[0]],M+2,y);
+      if(e[1].lv){var c=sc2[e[1].lv]||[150,150,150];doc.setFillColor(c[0],c[1],c[2]);doc.roundedRect(M+65,y-4,24,6,1,1,'F');doc.setTextColor(255,255,255);doc.setFontSize(7.5);doc.text(e[1].lv,M+77,y,{align:'center'});doc.setTextColor(30,30,30);}
+      y+=7;
+    });
+  }
+  var pz=document.getElementById('pz').value;
+  if(pz){doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,80,80);var zl=doc.splitTextToSize('Zones: '+pz,CW);doc.text(zl,M,y);y+=zl.length*4+4;}
+  y+=2;
+  sec('PRODUITS');
+  var prods2=getProds();
+  if(prods2.length===0){doc.text('Aucun produit',M,y);y+=7;}
+  else{
+    doc.setFillColor(220,225,240);doc.rect(M,y-3,CW,7,'F');doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(60,70,100);
+    doc.text('PRODUIT',M+2,y+1);doc.text('METHODE',M+80,y+1);doc.text('QTE',M+148,y+1);y+=8;
+    prods2.forEach(function(p,i){if(y>270){doc.addPage();y=M;}if(i%2===0){doc.setFillColor(248,249,252);doc.rect(M,y-3,CW,6.5,'F');}doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(30,30,30);doc.text(p.name,M+2,y+1);doc.text(p.meth||'-',M+80,y+1);doc.text(p.qty||'-',M+148,y+1);y+=7;});
+  }
+  var tn=document.getElementById('tn').value;
+  if(tn){doc.setFont('helvetica','italic');doc.setFontSize(8.5);doc.setTextColor(90,90,90);var tl=doc.splitTextToSize(tn,CW);doc.text(tl,M,y+2);y+=tl.length*4+6;}
+  y+=2;
+  sec('RECOMMANDATIONS');
+  var recos2=getR();
+  if(recos2.length===0){doc.text('Aucune',M,y);y+=7;}
+  else{recos2.forEach(function(r){if(y>270){doc.addPage();y=M;}var rl=doc.splitTextToSize('- '+r,CW-4);doc.text(rl,M+2,y);y+=rl.length*5+1;});}
+  y+=2;
+  sec('SUIVI');
+  fld('PROCHAINE VISITE',fdate(document.getElementById('nv').value),M,H);
+  fld('RISQUE',document.getElementById('rsk').value,M+H,H);y+=14;
+  if(y>260){doc.addPage();y=M;}
+  doc.setDrawColor(180,180,180);doc.line(M,y+14,M+65,y+14);doc.line(M+90,y+14,M+155,y+14);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(130,130,130);
+  doc.text('Signature technicien',M,y+18);
+  var sig=document.getElementById('sig').value;
+  doc.text('Signature client'+(sig?' : '+sig:''),M+90,y+18);
+  var tp=doc.internal.getNumberOfPages();
+  for(var i=1;i<=tp;i++){doc.setPage(i);doc.setFillColor(240,242,248);doc.rect(0,285,210,12,'F');doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(130,130,130);doc.text('SOS Deratiseur & Nuisibles - '+window._rid,M,291);doc.text('Page '+i+'/'+tp,W-M,291,{align:'right'});}
+  doc.save('Rapport_'+(document.getElementById('cn').value||'client').replace(/\s+/g,'_')+'_'+window._rid+'.pdf');
+  showToast('PDF exporte!');
+}
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+window.onload=function(){
+  var t=new Date();
+  document.getElementById('vd').value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+  document.getElementById('vs').value=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
+  var rid='RPT-'+Date.now().toString(36).toUpperCase();
+  document.getElementById('rid').textContent=rid;
+  window._rid=rid;
+  addP();addR();addR();
+  if(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.navigator.standalone){
+    setTimeout(function(){document.getElementById('iosbanner').style.display='block';},3000);
+  }
+};
+</script>
+</body>
+</html>
