@@ -134,17 +134,17 @@ select option{background:var(--surface2);}
 </header>
 
 <div class="steps" id="steps-bar">
-  <button class="step active" id="st0" onclick="goTo(0)"><span class="step-n">1</span>Client</button>
+  <button type="button" class="step active" id="st0" onclick="goTo(0)"><span class="step-n">1</span>Client</button>
   <div class="sep"></div>
-  <button class="step" id="st1" onclick="goTo(1)"><span class="step-n">2</span>Nuisibles</button>
+  <button type="button" class="step" id="st1" onclick="goTo(1)"><span class="step-n">2</span>Nuisibles</button>
   <div class="sep"></div>
-  <button class="step" id="st2" onclick="goTo(2)"><span class="step-n">3</span>Produits</button>
+  <button type="button" class="step" id="st2" onclick="goTo(2)"><span class="step-n">3</span>Produits</button>
   <div class="sep"></div>
-  <button class="step" id="st3" onclick="goTo(3)"><span class="step-n">4</span>Photos</button>
+  <button type="button" class="step" id="st3" onclick="goTo(3)"><span class="step-n">4</span>Photos</button>
   <div class="sep"></div>
-  <button class="step" id="st4" onclick="goTo(4)"><span class="step-n">5</span>Recos</button>
+  <button type="button" class="step" id="st4" onclick="goTo(4)"><span class="step-n">5</span>Recos</button>
   <div class="sep"></div>
-  <button class="step" id="st5" onclick="goTo(5)"><span class="step-n">6</span>Rapport</button>
+  <button type="button" class="step" id="st5" onclick="goTo(5)"><span class="step-n">6</span>Rapport</button>
 </div>
 
 <main>
@@ -183,7 +183,7 @@ select option{background:var(--surface2);}
     <div class="fg"><label>Technicien</label><input type="text" id="v-tech" placeholder="Votre nom"></div>
   </div>
   <div class="fg"><label>Observations générales</label><textarea id="v-obs" placeholder="Conditions observées à l'arrivée..."></textarea></div>
-  <div class="nav"><div></div><button class="btn-p" onclick="goTo(1)">Suivant →</button></div>
+  <div class="nav"><div></div><button type="button" class="btn-p" onclick="goTo(1)">Suivant →</button></div>
 </div>
 
 <!-- PAGE 1 -->
@@ -237,7 +237,7 @@ select option{background:var(--surface2);}
     </div>
   </div>
   <div class="fg"><label>Zones infestées</label><textarea id="p-zones" placeholder="Ex: Cuisine (sous évier), cave, local poubelles..."></textarea></div>
-  <div class="nav"><button class="btn-s" onclick="goTo(0)">← Retour</button><button class="btn-p" onclick="goTo(2)">Suivant →</button></div>
+  <div class="nav"><button type="button" class="btn-s" onclick="goTo(0)">← Retour</button><button type="button" class="btn-p" onclick="goTo(2)">Suivant →</button></div>
 </div>
 
 <!-- PAGE 2 -->
@@ -248,7 +248,7 @@ select option{background:var(--surface2);}
     <label>Produit</label><label>Méthode</label><label>Quantité</label><div></div>
   </div>
   <div id="prod-list"></div>
-  <button class="btn-s btn-full" onclick="addProd()" style="margin-bottom:20px;">+ Ajouter un produit</button>
+  <button type="button" class="btn-s btn-full" onclick="addProd()" style="margin-bottom:20px;">+ Ajouter un produit</button>
   <div class="divider"></div>
   <div class="fg"><label>Type d'intervention</label>
     <select id="int-type">
@@ -261,7 +261,7 @@ select option{background:var(--surface2);}
     </select>
   </div>
   <div class="fg" style="margin-top:12px;"><label>Notes sur le traitement</label><textarea id="t-notes" placeholder="Zones traitées, précautions..."></textarea></div>
-  <div class="nav"><button class="btn-s" onclick="goTo(1)">← Retour</button><button class="btn-p" onclick="goTo(3)">Suivant →</button></div>
+  <div class="nav"><button type="button" class="btn-s" onclick="goTo(1)">← Retour</button><button type="button" class="btn-p" onclick="goTo(3)">Suivant →</button></div>
 </div>
 
 <!-- PAGE 3 -->
@@ -274,7 +274,7 @@ select option{background:var(--surface2);}
     <p style="color:var(--muted);font-size:0.88rem;"><span style="color:var(--accent);font-weight:600;">Appuie ici</span> pour ajouter des photos</p>
   </div>
   <div class="photo-grid" id="ph-grid"></div>
-  <div class="nav"><button class="btn-s" onclick="goTo(2)">← Retour</button><button class="btn-p" onclick="goTo(4)">Suivant →</button></div>
+  <div class="nav"><button type="button" class="btn-s" onclick="goTo(2)">← Retour</button><button type="button" class="btn-p" onclick="goTo(4)">Suivant →</button></div>
 </div>
 
 <!-- PAGE 4 -->
@@ -282,7 +282,7 @@ select option{background:var(--surface2);}
   <div class="ptitle">Recommandations & suivi</div>
   <div class="psub">Actions pour le client et prochaine visite</div>
   <div id="reco-list"></div>
-  <button class="btn-s btn-full" onclick="addReco()" style="margin-bottom:20px;">+ Ajouter une recommandation</button>
+  <button type="button" class="btn-s btn-full" onclick="addReco()" style="margin-bottom:20px;">+ Ajouter une recommandation</button>
   <div class="divider"></div>
   <div class="fg2">
     <div class="fg"><label>Prochaine visite</label><input type="date" id="next-v"></div>
@@ -297,7 +297,7 @@ select option{background:var(--surface2);}
     </div>
   </div>
   <div class="fg"><label>Nom du client présent (signature)</label><input type="text" id="sig" placeholder="Nom complet du représentant"></div>
-  <div class="nav"><button class="btn-s" onclick="goTo(3)">← Retour</button><button class="btn-p" onclick="buildReport()">Générer →</button></div>
+  <div class="nav"><button type="button" class="btn-s" onclick="goTo(3)">← Retour</button><button type="button" class="btn-p" onclick="buildReport()">Générer →</button></div>
 </div>
 
 <!-- PAGE 5 -->
@@ -305,14 +305,14 @@ select option{background:var(--surface2);}
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
     <div><div class="ptitle">Rapport ✓</div><div class="psub">Aperçu avant export PDF</div></div>
     <div style="display:flex;gap:8px;">
-      <button class="btn-s" onclick="goTo(0)">✏️ Modifier</button>
-      <button class="btn-p" onclick="exportPDF()">⬇ PDF</button>
+      <button type="button" class="btn-s" onclick="goTo(0)">✏️ Modifier</button>
+      <button type="button" class="btn-p" onclick="exportPDF()">⬇ PDF</button>
     </div>
   </div>
   <div class="preview" id="preview-box"></div>
   <div class="nav" style="margin-top:20px;">
-    <button class="btn-s" onclick="goTo(4)">← Retour</button>
-    <button class="btn-p" onclick="exportPDF()">⬇ Exporter PDF</button>
+    <button type="button" class="btn-s" onclick="goTo(4)">← Retour</button>
+    <button type="button" class="btn-p" onclick="exportPDF()">⬇ Exporter PDF</button>
   </div>
 </div>
 
@@ -328,7 +328,7 @@ select option{background:var(--surface2);}
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 var pests = {};
 var photos = [];
@@ -339,7 +339,7 @@ function init() {
   var yyyy = today.getFullYear();
   var mm = String(today.getMonth()+1).padStart(2,'0');
   var dd = String(today.getDate()).padStart(2,'0');
-  document.getElementById('v-date').value = yyyy+'-'+mm+'-'+dd;
+  try { document.getElementById('v-date').value = yyyy+'-'+mm+'-'+dd; } catch(e){}
   var hh = String(today.getHours()).padStart(2,'0');
   var mi = String(today.getMinutes()).padStart(2,'0');
   document.getElementById('v-start').value = hh+':'+mi;
@@ -389,7 +389,7 @@ function addProd() {
   var list = document.getElementById('prod-list');
   var row = document.createElement('div');
   row.className = 'prod-row';
-  row.innerHTML = '<input type="text" placeholder="Ex: Racumin Gel" class="pn"><input type="text" placeholder="Application directe" class="pm"><input type="text" placeholder="50g" class="pq"><button class="btn-del" onclick="this.parentElement.remove()">✕</button>';
+  row.innerHTML = '<input type="text" placeholder="Ex: Racumin Gel" class="pn"><input type="text" placeholder="Application directe" class="pm"><input type="text" placeholder="50g" class="pq"><button type="button" class="btn-del" onclick="this.parentElement.remove()">✕</button>';
   list.appendChild(row);
 }
 
@@ -411,7 +411,7 @@ function renderPhotos() {
   photos.forEach(function(src, i) {
     var d = document.createElement('div');
     d.className = 'pthumb';
-    d.innerHTML = '<img src="'+src+'"><button class="pdel" onclick="rmPhoto('+i+')">✕</button>';
+    d.innerHTML = '<img src="'+src+'"><button type="button" class="pdel" onclick="rmPhoto('+i+')">✕</button>';
     grid.appendChild(d);
   });
 }
@@ -422,7 +422,7 @@ function addReco() {
   var list = document.getElementById('reco-list');
   var row = document.createElement('div');
   row.className = 'reco-row';
-  row.innerHTML = '<input type="text" placeholder="Ex: Colmater les fissures sous l'évier..."><button class="btn-del" onclick="this.parentElement.remove()">✕</button>';
+  row.innerHTML = '<input type="text" placeholder="Ex: Colmater les fissures sous l'évier..."><button type="button" class="btn-del" onclick="this.parentElement.remove()">✕</button>';
   list.appendChild(row);
 }
 
