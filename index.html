@@ -889,7 +889,7 @@ function expPDF(){
     doc.text(pCompany+' | '+pPhone+' | TVA: '+pTva,M,291);
     doc.text('Page '+i+'/'+tp,W-M,291,{align:'right'});
   }
-  doc.save('Rapport_'+(document.getElementById('cn').value||'client').replace(/\s+/g,'_')+'_'+window._rid+'.pdf');
+  doc.save('Rapport_'+(getClientName().replace(/[^a-zA-Z0-9]/g,'_')||'client').replace(/\s+/g,'_')+'_'+window._rid+'.pdf');
   showToast('PDF exporte!');
 }
 
@@ -914,7 +914,15 @@ function getClientName(){
   } else if(clientType==='professionnel'){
     return document.getElementById('c-societe').value.trim() || '-';
   }
-  return document.getElementById('cn')?document.getElementById('cn').value||'-':'-';
+  // Fallback: try both fields
+  var soc=document.getElementById('c-societe');
+  var prenom=document.getElementById('c-prenom');
+  if(soc&&soc.value.trim()) return soc.value.trim();
+  if(prenom&&prenom.value.trim()){
+    var nom=document.getElementById('c-nom');
+    return prenom.value.trim()+(nom&&nom.value.trim()?' '+nom.value.trim():'');
+  }
+  return '-';
 }
 
 function getClientTVA(){
